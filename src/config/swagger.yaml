@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: User Service API
+  version: 1.0.0
+  description: API de serviço de usuários para E-commerce
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor de desenvolvimento
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID do usuário
+        name:
+          type: string
+          description: Nome do usuário
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+        password:
+          type: string
+          format: password
+          description: Senha do usuário (criptografada)
+        createdAt:
+          type: string
+          format: date-time
+          description: Data de criação
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data de atualização
+
+    RegisterUser:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          description: Nome do usuário
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+        password:
+          type: string
+          format: password
+          description: Senha do usuário
+
+    LoginUser:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+        password:
+          type: string
+          format: password
+          description: Senha do usuário
+
+    RefreshToken:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: Token de refresh
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: Token de acesso
+        refreshToken:
+          type: string
+          description: Token de refresh
+
+tags:
+  - name: Users
+    description: Endpoints relacionados a usuários
+
+paths:
+  /api/users/register:
+    post:
+      summary: Registra um novo usuário
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUser'
+      responses:
+        201:
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Dados inválidos
+
+  /api/users/login:
+    post:
+      summary: Realiza login do usuário
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        200:
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Credenciais inválidas
+
+  /api/users/refresh-token:
+    post:
+      summary: Atualiza o token de acesso
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+      responses:
+        200:
+          description: Token atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Token inválido 
