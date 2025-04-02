@@ -6,7 +6,7 @@ const swaggerYaml = YAML.load(path.join(__dirname, 'swagger.yaml'));
 
 const options = {
   definition: swaggerYaml,
-  apis: [], // Não precisamos mais de apis pois estamos usando o arquivo YAML
+  apis: [],
 };
 
 export const swaggerSpec = swaggerJsdoc(options); 
